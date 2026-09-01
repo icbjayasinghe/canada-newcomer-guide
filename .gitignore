@@ -1,0 +1,68 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Local configuration
+local.properties
+
+# APK / AAB
+*.apk
+*.ap_
+*.aab
+
+# Android build output
+*/build/
+captures/
+
+# Generated files
+.externalNativeBuild/
+.cxx/
+
+# Kotlin
+.kotlin/
+
+# Java
+*.class
+
+# Signing files
+*.jks
+*.keystore
+
+# Google Services
+google-services.json
+
+# Navigation editor
+.navigation/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# Firebase / Crashlytics
+crashlytics-build.properties
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
+
+# Android Studio caches
+*.hprof
+
+# Version control
+.vscode/
