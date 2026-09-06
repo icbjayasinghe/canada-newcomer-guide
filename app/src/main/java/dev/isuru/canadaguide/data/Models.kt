@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
  * A Canadian province or territory, with the local names of the authorities
  * newcomers will need to deal with (these differ by jurisdiction).
  */
-data class Province(
+data class ProvinceOld(
     val id: String,
     val name: String,
     val abbreviation: String,
@@ -18,7 +18,7 @@ data class Province(
 /**
  * A top-level setup activity a newcomer needs to complete (e.g. "Get a Health Card").
  */
-data class Activity(
+data class ActivityOld(
     val id: String,
     val title: String,
     val summary: String,
@@ -28,7 +28,7 @@ data class Activity(
 /**
  * A single actionable step within an activity, with a short description.
  */
-data class TaskItem(
+data class TaskItemOld(
     val id: String,
     val title: String,
     val description: String

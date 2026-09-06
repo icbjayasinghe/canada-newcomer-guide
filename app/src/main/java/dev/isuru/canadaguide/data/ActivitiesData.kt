@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Wifi
+import dev.isuru.canadaguide.data.model.ProvinceActivity
 
 /**
  * The setup activities shown for every province. The list of activities is the
@@ -19,68 +20,68 @@ import androidx.compose.material.icons.filled.Wifi
  */
 object ActivitiesData {
 
-    val all: List<Activity> = listOf(
-        Activity(
+    val all: List<ProvinceActivity> = listOf(
+        ProvinceActivity(
             id = "sin",
             title = "Apply for a SIN",
             summary = "Your Social Insurance Number — required to work and access benefits",
-            icon = Icons.Filled.Badge
+            icon = Icons.Filled.Badge.toString()
         ),
-        Activity(
+        ProvinceActivity(
             id = "health",
             title = "Get a Health Card",
             summary = "Provincial health coverage so medical visits are covered",
-            icon = Icons.Filled.LocalHospital
+            icon = Icons.Filled.LocalHospital.toString()
         ),
-        Activity(
+        ProvinceActivity(
             id = "bank",
             title = "Open a Bank Account",
             summary = "Set up chequing, savings, and a newcomer banking package",
-            icon = Icons.Filled.AccountBalance
+            icon = Icons.Filled.AccountBalance.toString()
         ),
-        Activity(
+        ProvinceActivity(
             id = "license",
             title = "Get a Driver's License",
             summary = "Exchange or apply for a licence to drive in your province",
-            icon = Icons.Filled.DirectionsCar
+            icon = Icons.Filled.DirectionsCar.toString()
         ),
-        Activity(
+        ProvinceActivity(
             id = "housing",
             title = "Find Housing",
             summary = "Search listings, understand leases, and avoid rental scams",
-            icon = Icons.Filled.Home
+            icon = Icons.Filled.Home.toString()
         ),
-        Activity(
+        ProvinceActivity(
             id = "phone",
             title = "Get Phone & Internet",
             summary = "Compare carriers and set up a mobile and home internet plan",
-            icon = Icons.Filled.Wifi
+            icon = Icons.Filled.Wifi.toString()
         ),
-        Activity(
+        ProvinceActivity(
             id = "tax",
             title = "Register for Taxes",
             summary = "Set up a CRA My Account and understand your filing obligations",
-            icon = Icons.Filled.Receipt
+            icon = Icons.Filled.Receipt.toString()
         ),
-        Activity(
+        ProvinceActivity(
             id = "doctor",
             title = "Find a Family Doctor",
             summary = "Get on a patient registry and know your options for care",
-            icon = Icons.Filled.MedicalServices
+            icon = Icons.Filled.MedicalServices.toString()
         ),
-        Activity(
+        ProvinceActivity(
             id = "transit",
             title = "Learn Public Transit",
             summary = "Understand fares, transit apps, and getting around your city",
-            icon = Icons.Filled.DirectionsBus
+            icon = Icons.Filled.DirectionsBus.toString()
         ),
-        Activity(
+        ProvinceActivity(
             id = "school",
             title = "Enroll Kids in School",
             summary = "Register children with your local school board",
-            icon = Icons.Filled.School
+            icon = Icons.Filled.School.toString()
         )
     )
 
-    fun byId(id: String): Activity = all.first { it.id == id }
+    fun byId(id: String): ProvinceActivity = all.first { it.id == id }
 }

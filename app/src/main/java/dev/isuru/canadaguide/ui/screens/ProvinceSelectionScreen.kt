@@ -1,7 +1,6 @@
 package dev.isuru.canadaguide.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,15 +26,47 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.isuru.canadaguide.data.Province
+import dev.isuru.canadaguide.data.ProvinceOld
 import dev.isuru.canadaguide.data.ProvincesData
+import dev.isuru.canadaguide.data.model.Province
+import dev.isuru.canadaguide.data.model.CountryDocument
+import dev.isuru.canadaguide.data.model.ProvinceActivity
+import dev.isuru.canadaguide.ui.theme.CanadaGuideTheme
 
 @Composable
 fun ProvinceSelectionScreen(
+    viewModel: ProvinceViewModel,
+    onProvinceSelected: (Province) -> Unit
+) {
+    val country by viewModel.countryDocument.collectAsState()
+    val loading by viewModel.loading.collectAsState()
+    val error by viewModel.error.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadCountry()
+    }
+
+    ProvinceSelectionContent(
+        country = country,
+        loading = loading,
+        error = error,
+        onProvinceSelected = onProvinceSelected
+    )
+}
+
+@Composable
+fun ProvinceSelectionContent(
+    country: CountryDocument?,
+    loading: Boolean,
+    error: String?,
     onProvinceSelected: (Province) -> Unit
 ) {
     Scaffold { innerPadding ->
@@ -55,8 +86,10 @@ fun ProvinceSelectionScreen(
                 HeaderBlock()
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            items(ProvincesData.all, key = { it.id }) { province ->
+            items(items = country?.provinces ?: emptyList()) { province ->
                 ProvinceRow(province = province, onClick = { onProvinceSelected(province) })
+//            items(ProvincesData.all, key = { it.id }) { province ->
+//                ProvinceRow(provinceOld = province, onClick = { onProvinceSelected(province) })
             }
         }
     }
@@ -100,9 +133,9 @@ private fun HeaderBlock() {
 }
 
 @Composable
-private fun ProvinceRow(province: Province, onClick: () -> Unit) {
+private fun ProvinceRow(province: Province, onClick: (activities: List<ProvinceActivity>) -> Unit) {
     Card(
-        onClick = onClick,
+        onClick = { onClick(province.activities) },
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -140,5 +173,24 @@ private fun ProvinceRow(province: Province, onClick: () -> Unit) {
                 tint = MaterialTheme.colorScheme.outline
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProvinceSelectionScreenPreview() {
+    CanadaGuideTheme {
+        ProvinceSelectionContent(
+            country = CountryDocument(
+                provinces = listOf(
+                    Province(id = "1", name = "Ontario", abbreviation = "ON"),
+                    Province(id = "2", name = "British Columbia", abbreviation = "BC"),
+                    Province(id = "3", name = "Quebec", abbreviation = "QC")
+                )
+            ),
+            loading = false,
+            error = null,
+            onProvinceSelected = {}
+        )
     }
 }

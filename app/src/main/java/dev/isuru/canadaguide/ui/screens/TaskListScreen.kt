@@ -34,33 +34,36 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.isuru.canadaguide.data.Activity
-import dev.isuru.canadaguide.data.Province
-import dev.isuru.canadaguide.data.TaskItem
+import dev.isuru.canadaguide.data.ActivitiesData
+import dev.isuru.canadaguide.data.ProvinceOld
+import dev.isuru.canadaguide.data.ProvincesData
+import dev.isuru.canadaguide.data.TaskItemOld
 import dev.isuru.canadaguide.data.TasksData
+import dev.isuru.canadaguide.data.model.Province
+import dev.isuru.canadaguide.data.model.ProvinceActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
-    province: Province,
-    activity: Activity,
+    provinceOld: Province,
+    activityOld: ProvinceActivity,
     onBack: () -> Unit
 ) {
-    val tasks = remember(province.id, activity.id) { TasksData.tasksFor(province, activity.id) }
-    val checkedIds = remember(activity.id) { mutableStateOf(setOf<String>()) }
+    val tasks = remember(provinceOld.id, activityOld.id) { TasksData.tasksFor(provinceOld, activityOld.id) }
+    val checkedIds = remember(activityOld.id) { mutableStateOf(setOf<String>()) }
     val checkedCount = checkedIds.value.size
     val progress = if (tasks.isEmpty()) 0f else checkedCount / tasks.size.toFloat()
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(activity.title, style = MaterialTheme.typography.titleLarge) },
+                title = { Text(activityOld.title, style = MaterialTheme.typography.titleLarge) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
@@ -80,7 +83,7 @@ fun TaskListScreen(
         ) {
             Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)) {
                 Text(
-                    text = activity.summary,
+                    text = activityOld.summary,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -136,7 +139,7 @@ fun TaskListScreen(
 }
 
 @Composable
-private fun TaskRow(task: TaskItem, isChecked: Boolean, onToggle: () -> Unit) {
+private fun TaskRow(task: TaskItemOld, isChecked: Boolean, onToggle: () -> Unit) {
     val containerColor by animateColorAsState(
         targetValue = if (isChecked) {
             MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
@@ -204,4 +207,14 @@ private fun CheckBadge(isChecked: Boolean) {
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TaskListScreenPreview() {
+    TaskListScreen(
+        provinceOld = ProvincesData.all[0],
+        activityOld = ActivitiesData.all[1],
+        onBack = {}
+    )
 }

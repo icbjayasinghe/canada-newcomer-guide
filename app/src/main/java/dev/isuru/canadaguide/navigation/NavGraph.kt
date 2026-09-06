@@ -1,14 +1,17 @@
 package dev.isuru.canadaguide.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dev.isuru.canadaguide.data.ActivitiesData
 import dev.isuru.canadaguide.data.ProvincesData
+import dev.isuru.canadaguide.data.repository.CountryRepository
 import dev.isuru.canadaguide.ui.screens.ActivitiesScreen
 import dev.isuru.canadaguide.ui.screens.ProvinceSelectionScreen
+import dev.isuru.canadaguide.ui.screens.ProvinceViewModel
 import dev.isuru.canadaguide.ui.screens.TaskListScreen
 
 private object Routes {
@@ -22,10 +25,16 @@ private object Routes {
 
 @Composable
 fun AppNavGraph(navController: NavHostController = rememberNavController()) {
+
+    val repository = CountryRepository()
+
     NavHost(navController = navController, startDestination = Routes.PROVINCES) {
 
         composable(Routes.PROVINCES) {
-            ProvinceSelectionScreen(
+
+            val viewModel: ProvinceViewModel = viewModel()
+
+            ProvinceSelectionScreen(viewModel,
                 onProvinceSelected = { province ->
                     navController.navigate(Routes.activities(province.id))
                 }
@@ -52,8 +61,8 @@ fun AppNavGraph(navController: NavHostController = rememberNavController()) {
             val activity = ActivitiesData.byId(activityId)
 
             TaskListScreen(
-                province = province,
-                activity = activity,
+                provinceOld = province,
+                activityOld = activity,
                 onBack = { navController.popBackStack() }
             )
         }
