@@ -1,4 +1,4 @@
-package dev.isuru.canadaguide.data
+package dev.isuru.canadaguide.data.sampleData
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalance

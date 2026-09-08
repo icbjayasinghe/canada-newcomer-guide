@@ -40,22 +40,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.isuru.canadaguide.data.ActivitiesData
-import dev.isuru.canadaguide.data.ProvinceOld
-import dev.isuru.canadaguide.data.ProvincesData
-import dev.isuru.canadaguide.data.TaskItemOld
-import dev.isuru.canadaguide.data.TasksData
-import dev.isuru.canadaguide.data.model.Province
+import dev.isuru.canadaguide.data.sampleData.ActivitiesData
 import dev.isuru.canadaguide.data.model.ProvinceActivity
+import dev.isuru.canadaguide.data.model.Task
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
-    provinceOld: Province,
-    activityOld: ProvinceActivity,
+    activityOld: ProvinceActivity?,
     onBack: () -> Unit
 ) {
-    val tasks = remember(provinceOld.id, activityOld.id) { TasksData.tasksFor(provinceOld, activityOld.id) }
+    val tasks = activityOld!!.tasks
     val checkedIds = remember(activityOld.id) { mutableStateOf(setOf<String>()) }
     val checkedCount = checkedIds.value.size
     val progress = if (tasks.isEmpty()) 0f else checkedCount / tasks.size.toFloat()
@@ -139,7 +134,7 @@ fun TaskListScreen(
 }
 
 @Composable
-private fun TaskRow(task: TaskItemOld, isChecked: Boolean, onToggle: () -> Unit) {
+private fun TaskRow(task: Task, isChecked: Boolean, onToggle: () -> Unit) {
     val containerColor by animateColorAsState(
         targetValue = if (isChecked) {
             MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
@@ -213,7 +208,6 @@ private fun CheckBadge(isChecked: Boolean) {
 @Composable
 fun TaskListScreenPreview() {
     TaskListScreen(
-        provinceOld = ProvincesData.all[0],
         activityOld = ActivitiesData.all[1],
         onBack = {}
     )

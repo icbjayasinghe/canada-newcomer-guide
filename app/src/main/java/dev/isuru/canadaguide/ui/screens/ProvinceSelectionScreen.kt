@@ -34,8 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.isuru.canadaguide.data.ProvinceOld
-import dev.isuru.canadaguide.data.ProvincesData
 import dev.isuru.canadaguide.data.model.Province
 import dev.isuru.canadaguide.data.model.CountryDocument
 import dev.isuru.canadaguide.data.model.ProvinceActivity

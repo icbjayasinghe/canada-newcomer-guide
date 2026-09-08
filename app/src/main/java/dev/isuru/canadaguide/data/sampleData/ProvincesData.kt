@@ -1,4 +1,4 @@
-package dev.isuru.canadaguide.data
+package dev.isuru.canadaguide.data.sampleData
 
 import dev.isuru.canadaguide.data.model.Province
 

@@ -1,14 +1,14 @@
 package dev.isuru.canadaguide.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import dev.isuru.canadaguide.data.ActivitiesData
-import dev.isuru.canadaguide.data.ProvincesData
-import dev.isuru.canadaguide.data.repository.CountryRepository
 import dev.isuru.canadaguide.ui.screens.ActivitiesScreen
 import dev.isuru.canadaguide.ui.screens.ProvinceSelectionScreen
 import dev.isuru.canadaguide.ui.screens.ProvinceViewModel
@@ -39,7 +39,7 @@ fun AppNavGraph(navController: NavHostController = rememberNavController()) {
         composable(Routes.ACTIVITIES) { backStackEntry ->
             val provinceId = backStackEntry.arguments?.getString("provinceId") ?: return@composable
             ActivitiesScreen(
-                viewModel,
+                viewModel = viewModel,
                 provinceId = provinceId,
                 onActivityClick = { activity ->
                     navController.navigate(Routes.tasks(provinceId, activity.id))
@@ -51,11 +51,17 @@ fun AppNavGraph(navController: NavHostController = rememberNavController()) {
         composable(Routes.TASKS) { backStackEntry ->
             val provinceId = backStackEntry.arguments?.getString("provinceId") ?: return@composable
             val activityId = backStackEntry.arguments?.getString("activityId") ?: return@composable
-            val province = ProvincesData.byId(provinceId)
-            val activity = ActivitiesData.byId(activityId)
+
+            val country by viewModel.countryDocument.collectAsState()
+            val province = remember(country, provinceId) {
+                country?.provinces?.find { it.id == provinceId }
+            }
+            val activity = remember(province, activityId) {
+                province?.activities?.find { it.id == activityId }
+            }
+//            val activity = ActivitiesData.byId(activityId)
 
             TaskListScreen(
-                provinceOld = province,
                 activityOld = activity,
                 onBack = { navController.popBackStack() }
             )
