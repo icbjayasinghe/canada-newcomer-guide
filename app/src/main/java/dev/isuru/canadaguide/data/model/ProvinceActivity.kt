@@ -1,6 +1,5 @@
 package dev.isuru.canadaguide.data.model
 
-import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.serialization.Serializable
 
 @Serializable

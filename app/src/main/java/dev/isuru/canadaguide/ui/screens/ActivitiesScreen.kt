@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -41,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import dev.isuru.canadaguide.data.sampleData.ProvincesData
 import dev.isuru.canadaguide.data.model.ProvinceActivity
 import dev.isuru.canadaguide.ui.theme.CanadaGuideTheme
+import dev.isuru.canadaguide.ui.utils.IconMapper
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -150,7 +150,7 @@ private fun ActivityRow(activityOld: ProvinceActivity, onClick: () -> Unit) {
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Filled.MedicalServices,
+                    imageVector = IconMapper.getIcon(activityOld.icon),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )
