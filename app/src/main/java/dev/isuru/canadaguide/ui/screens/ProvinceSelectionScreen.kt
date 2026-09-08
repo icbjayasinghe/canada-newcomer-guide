@@ -135,7 +135,8 @@ private fun HeaderBlock() {
 @Composable
 private fun ProvinceRow(province: Province, onClick: (activities: List<ProvinceActivity>) -> Unit) {
     Card(
-        onClick = { onClick(province.activities) },
+        onClick = { onClick(province.activities)
+                  },
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),

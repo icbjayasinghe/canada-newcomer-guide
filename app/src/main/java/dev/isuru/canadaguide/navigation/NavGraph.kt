@@ -26,14 +26,9 @@ private object Routes {
 @Composable
 fun AppNavGraph(navController: NavHostController = rememberNavController()) {
 
-    val repository = CountryRepository()
-
+    val viewModel: ProvinceViewModel = viewModel()
     NavHost(navController = navController, startDestination = Routes.PROVINCES) {
-
         composable(Routes.PROVINCES) {
-
-            val viewModel: ProvinceViewModel = viewModel()
-
             ProvinceSelectionScreen(viewModel,
                 onProvinceSelected = { province ->
                     navController.navigate(Routes.activities(province.id))
@@ -43,12 +38,11 @@ fun AppNavGraph(navController: NavHostController = rememberNavController()) {
 
         composable(Routes.ACTIVITIES) { backStackEntry ->
             val provinceId = backStackEntry.arguments?.getString("provinceId") ?: return@composable
-            val province = ProvincesData.byId(provinceId)
-
             ActivitiesScreen(
-                province = province,
+                viewModel,
+                provinceId = provinceId,
                 onActivityClick = { activity ->
-                    navController.navigate(Routes.tasks(province.id, activity.id))
+                    navController.navigate(Routes.tasks(provinceId, activity.id))
                 },
                 onBack = { navController.popBackStack() }
             )

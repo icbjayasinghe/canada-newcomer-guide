@@ -30,11 +30,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import dev.isuru.canadaguide.data.ActivityOld
 import dev.isuru.canadaguide.data.ActivitiesData
 import dev.isuru.canadaguide.data.ProvincesData
@@ -49,9 +54,10 @@ import dev.isuru.canadaguide.ui.theme.CanadaGuideTheme
 fun ActivitiesScreenPreview() {
     CanadaGuideTheme {
         ActivitiesScreen(
-            province = ProvincesData.all[0],
+            viewModel = ProvinceViewModel(),
+            provinceId = ProvincesData.all[0].id,
             onActivityClick = {},
-            onBack = {}
+            onBack = {},
         )
     }
 }
@@ -59,14 +65,24 @@ fun ActivitiesScreenPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivitiesScreen(
-    province: Province,
+    viewModel: ProvinceViewModel,
+    provinceId: String,
     onActivityClick: (ProvinceActivity) -> Unit,
     onBack: () -> Unit
 ) {
+    val country by viewModel.countryDocument.collectAsState()
+    val province = remember(country, provinceId) {
+        country?.provinces?.find { it.id == provinceId }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.loadCountry()
+    }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(province.name, style = MaterialTheme.typography.titleLarge) },
+                title = { Text(province?.name ?: "", style = MaterialTheme.typography.titleLarge) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -78,29 +94,40 @@ fun ActivitiesScreen(
             )
         }
     ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
-            contentPadding = PaddingValues(
-                start = 20.dp,
-                end = 20.dp,
-                top = innerPadding.calculateTopPadding() + 12.dp,
-                bottom = 32.dp
-            ),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            item {
-                Text(
-                    text = "Here's what to set up as you settle in. Tap an activity to see " +
-                        "the steps.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.padding(top = 12.dp))
+        if (province == null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Loading...")
             }
-            items(ActivitiesData.all, key = { it.id }) { activity ->
-                ActivityRow(activityOld = activity, onClick = { onActivityClick(activity) })
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background),
+                contentPadding = PaddingValues(
+                    start = 20.dp,
+                    end = 20.dp,
+                    top = innerPadding.calculateTopPadding() + 12.dp,
+                    bottom = 32.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                item {
+                    Text(
+                        text = "Here's what to set up as you settle in. Tap an activity to see " +
+                                "the steps.",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.padding(top = 12.dp))
+                }
+                items(province.activities, key = { it.id }) { activity ->
+                    ActivityRow(activityOld = activity, onClick = { onActivityClick(activity) })
+                }
             }
         }
     }
